@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from bigfloat import const_pi, precision
 from string import digits, maketrans, translate
 print translate(str(const_pi(precision(24746))), maketrans(digits, 'rd\neHwlo! '))

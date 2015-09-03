@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import string
 
 BASE_LIST = string.digits + string.letters + '_@'

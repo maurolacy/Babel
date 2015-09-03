@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from bigfloat import const_pi, precision
 
 import math

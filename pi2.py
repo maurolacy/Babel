@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import sys
 from bigfloat import *
 #from string import *
