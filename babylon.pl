@@ -19,24 +19,18 @@ if ( $l > 10 ) {
 print 's/.*?(.)';
 
 for ( $k=1; $k < @P; $k++ ) {
-	if ( $P[$k] ne $P[$k-1] ) {
-		print '(?!';
-		$f=1;
-		for ($h=0; $h < $k ; $h++ ) {
-			$i=$h+1;
-			if ( $P[$h] ne $P[$k]) {
-				print "|" if ($f == 0);
-				print "\\$i";
-				$f=0;
-			}
-		}
-		$s .= "\$$i";
-		print ')(.)';
-	} else {
-		$i=$k;
-		$s .= "\$$i";
-		print '(.)';
-	}
+    print '(?!';
+    $f=1;
+    for ($h=0; $h < $k ; $h++ ) {
+        $i=$h+1;
+        if ( $P[$h] ne $P[$k]) {
+            print "|" if ($f == 0);
+            print "\\$i";
+            $f=0;
+        }
+    }
+    $s .= "\$$i";
+    print ')(.)';
 }
 $i++;
 print ".*/$s\$$i/\n";
