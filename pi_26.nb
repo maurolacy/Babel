@@ -1,0 +1,67 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      1724,         58]
+NotebookOptionsPosition[      1489,         45]
+NotebookOutlinePosition[      1826,         60]
+CellTagsIndexPosition[      1783,         57]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{"f", " ", "=", " ", 
+  RowBox[{"OpenWrite", "[", 
+   RowBox[{"\"\<pi_26-100.txt\>\"", ",", " ", 
+    RowBox[{"FormatType", "\[Rule]", " ", "OutputForm"}], ",", " ", 
+    RowBox[{"PageWidth", " ", "\[Rule]", " ", "\[Infinity]"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Write", "[", 
+  RowBox[{"f", ",", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"StringJoin", "[", 
+      RowBox[{
+       RowBox[{"CharacterRange", "[", 
+        RowBox[{"\"\<a\>\"", ",", " ", "\"\<z\>\""}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"1", "+", "#1"}], "]"}], "]"}], "]"}], "&"}], "@@", " ", 
+    RowBox[{"RealDigits", "[", 
+     RowBox[{"Pi", ",", "26", ",", "100"}], "]"}]}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Close", "[", "f", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Quit", "[", "]"}]}], "Input",
+ CellChangeTimes->{
+  3.650230544539638*^9, {3.6502307495947037`*^9, 3.650230757195805*^9}}]
+},
+WindowSize->{740, 707},
+WindowMargins->{{169, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Linux x86 (64-bit) (February 23, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 928, 23, 107, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
