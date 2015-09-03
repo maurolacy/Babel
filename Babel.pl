@@ -10,11 +10,11 @@ for ( $k=0; $k < @P ; $k++ ) {
 	$P{$P[$k]} .= "$k";
 }
 
-$l = scalar keys %P;
-if ( $l > 10 ) {
-	print "More than 10 letters($l). Exiting\n";
-	exit 1;
-}
+#$l = scalar keys %P;
+#if ( $l > 10 ) {
+#	print "More than 10 letters($l). Exiting\n";
+#	exit 1;
+#}
 
 print 's/.*?(.)';
 
