@@ -4,6 +4,7 @@ PHRASE="$@"
 [ -z "$PHRASE" ] && echo "Usage: $0 <phrase>" && exit 1
 
 # Default number of digits to search for
+#DIGITS=100000
 DIGITS=1000000
 
 # Min numerical base to search
@@ -31,7 +32,7 @@ then
     TR="`./tr.py $KEY \"$PHRASE\"`"
     D=`./pi.m $DIGITS $B | perl -pe "$REGEX2" | wc -c`
     D=`expr $D - 2`
-    ./pi.m $D $B | tr 0-9A-Za-z "$TR"
+#    ./pi.m $D $B | tr 0-9A-Za-z "$TR"
     echo "Perlre: $REGEX"
     echo "Base  : $B"
     echo "Digits: $D"
