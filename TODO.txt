@@ -1,5 +1,5 @@
 - Rewrite the whole damn thing in decent Python
-- Replace Mathematica's ReadDigits[] with an (efficient) arbitrary numerical base Pi(or any irrational) digits generator
+- Replace Mathematica's ReadDigits[] with an efficient, arbitrary numerical base, \pi(or any irrational) digits generator
 - Automatically detect CPU power to determine max number of digits
 - Use multiple cores to speed up search
 - Support larger bases, (up to 256?)
