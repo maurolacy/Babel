@@ -45,16 +45,16 @@ then
         then
             echo -n A-Z
             D=`expr 60 + $B`
-            D=`gbase -d $D | grep ^Hex: | cut -f2 -d\ `
+            D=`echo "obase=16;$D" | bc`
             echo -n -e "a-\x$D"
         else
             D=`expr 54 + $B`
-            D=`gbase -d $D | grep ^Hex: | cut -f2 -d\ `
+            D=`echo "obase=16;$D" | bc`
             echo -n -e "A-\x$D"
         fi
     else
         D=`expr 47 + $B`
-        D=`gbase -d $D | grep ^Hex: | cut -f2 -d\ `
+        D=`echo "obase=16;$D" | bc`
         echo -n -e "0-\x$D"
     fi
     echo -n " "
