@@ -22,7 +22,7 @@ if __name__ == "__main__":
         d[key]=val
 
     for key in sorted(d):
-        if d[key] in (' ', '!', '?'): # escape these
+        if d[key] in (' ', '!', '?', '"', "'"): # escape these
             print('\%s' % d[key], end='')
         else:
             print(d[key], end='')
