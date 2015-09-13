@@ -31,7 +31,8 @@ then
     REGEX2=`echo $REGEX | sed 's/\.\*?//'`
     TR="`./tr.py $KEY \"$PHRASE\"`"
     D=`./pi.m $DIGITS $B | perl -pe "$REGEX2" | wc -c`
-    D=`expr $D - 2`
+#    D=`expr $D - 2` # Mathematica 8
+    D=`expr $D - 1` # Mathematica 10
 #    ./pi.m $D $B | tr 0-9A-Za-z "$TR"
     echo "Perlre: $REGEX"
     echo "Base  : $B"
