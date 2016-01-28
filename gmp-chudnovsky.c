@@ -589,6 +589,75 @@ build_sieve(long int n, sieve_t *s)
   }
 }
 
+// based on gmp mpf_out_str()
+size_t
+my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
+{
+  char *str;
+  mp_exp_t exp;
+  size_t written;
+//  TMP_DECL;
+
+//  TMP_MARK;
+
+  if (base == 0)
+    base = 10;
+//  if (n_digits == 0)
+//    MPF_SIGNIFICANT_DIGITS (n_digits, base, op->_mp_prec);
+
+  if (stream == 0)
+    stream = stdout;
+
+  /* Consider these changes:
+     * Don't allocate memory here for huge n_digits; pass NULL to mpf_get_str.
+     * Make mpf_get_str allocate extra space when passed NULL, to avoid
+       allocating two huge string buffers.
+     * Implement more/other allocation reductions tricks.  */
+
+//  str = (char *) TMP_ALLOC (n_digits + 2); /* extra for minus sign and \0 */
+  str = (char *) malloc(n_digits + 2); /* extra for minus sign and \0 */
+
+  mpf_get_str (str, &exp, base, n_digits, op);
+//  n_digits = strlen (str);
+
+  written = 0;
+
+  /* Write sign */
+  if (str[0] == '-')
+    {
+      str++;
+      fputc ('-', stream);
+      written = 1;
+      n_digits--;
+    }
+
+//  {
+//    const char  *point = GMP_DECIMAL_POINT;
+//    size_t      pointlen = strlen (point);
+//    putc ('0', stream);
+//    fwrite (point, 1, pointlen, stream);
+//    written += pointlen + 1;
+//  }
+
+  /* Write mantissa */
+  {
+    size_t fwret;
+    fwret = fwrite (str, 1, n_digits, stream);
+    written += fwret;
+  }
+
+  /* Write exponent */
+//  {
+//    int fpret;
+//    fpret = fprintf (stream, (base <= 10 ? "e%ld" : "@%ld"), exp);
+//    written += fpret;
+//  }
+
+//  TMP_FREE;
+  free(str);
+  return ferror (stream) ? 0 : written;
+}
+
 void
 usage() {
   printf("Usage: %s [digits] [output] [base]\n", prog_name);
@@ -604,7 +673,7 @@ int
 main(int argc, char *argv[])
 {
   mpf_t  pi, qi;
-  long int d=100, i, depth=1, terms, base=10;
+  long int d=100, i, depth=1, terms, base=10, out_digits;
   unsigned long psize, qsize;
   long begin, mid0, mid1, mid2, mid3, mid4, end;
 
@@ -620,6 +689,10 @@ main(int argc, char *argv[])
   }
   if (argc > 1+args)
     d = strtoul(argv[1+args], 0, 0);
+  d += 1; // 3
+  out_digits = d;
+  if (d<15) // avoid floating point exception
+	  d = 15;
   if (argc > 2+args)
     out = atoi(argv[2+args]);
   if (argc > 3+args)
@@ -781,7 +854,7 @@ main(int argc, char *argv[])
 	if (stats)
 		printf("pi(0,%ld)=\n", terms);
 //    mpf_out_str(stdout, 10, d+2, qi);
-    mpf_out_str(stdout, base, d+2, qi);
+    my_out_str(stdout, base, out_digits, qi);
     printf("\n");
   }
 
