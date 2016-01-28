@@ -593,16 +593,26 @@ int
 main(int argc, char *argv[])
 {
   mpf_t  pi, qi;
-  long int d=100, i, depth=1, terms;
+  long int d=100, i, depth=1, terms, base=10;
   unsigned long psize, qsize;
   long begin, mid0, mid1, mid2, mid3, mid4, end;
 
   prog_name = argv[0];
 
+  if (argc>1 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h"))) {
+    printf("Usage: %s [digits] [output] [base]\n", prog_name);
+    printf("Compute Archimedes' constant Pi to arbitrary accuracy\n.");
+    printf("Print output in different numerical bases.\n");
+    printf("\ndigits: number of digits(default 100)\noutput: 1, print output. 0, suppress output(default)\nbase: numerical base(2-62)(default 10)\n");
+    printf("\n--help: display this help and exit\n");
+    exit(1);
+  }
   if (argc>1)
     d = strtoul(argv[1], 0, 0);
   if (argc>2)
     out = atoi(argv[2]);
+  if (argc>3)
+    base = atoi(argv[3]);
 
   terms = d/DIGITS_PER_ITER;
   while ((1L<<depth)<terms)
@@ -742,7 +752,8 @@ main(int argc, char *argv[])
   /* output Pi and timing statistics */
   if (out&1)  {
     printf("pi(0,%ld)=\n", terms);
-    mpf_out_str(stdout, 10, d+2, qi);
+//    mpf_out_str(stdout, 10, d+2, qi);
+    mpf_out_str(stdout, base, d+2, qi);
     printf("\n");
   }
 
