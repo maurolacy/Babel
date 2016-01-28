@@ -1,4 +1,4 @@
-/* Pi computation using Chudnovsky's algortithm.
+/* Pi computation using Chudnovsky's algorithm.
 
  * Copyright 2002, 2005 Hanhong Xue (macroxue at yahoo dot com)
 
