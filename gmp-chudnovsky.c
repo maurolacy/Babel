@@ -432,7 +432,7 @@ fac_remove_gcd(mpz_t p, fac_t fp, mpz_t g, fac_t fg)
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
-int      out=0;
+int      out=0, stats=0;
 mpz_t   *pstack, *qstack, *gstack;
 fac_t  *fpstack, *fgstack;
 long int      top = 0;
@@ -492,7 +492,7 @@ bs(unsigned long a, unsigned long b, unsigned gflag, long int level)
     fac_mul_bp(fg1, 6*b-1, 1);	/* 6b-1 */
     fac_mul_bp(fg1, 6*b-5, 1);	/* 6b-5 */
 
-    if (b>(int)(progress)) {
+    if (stats && b>(int)(progress)) {
       printf("."); fflush(stdout);
       progress += percent*2;
     }
@@ -510,7 +510,7 @@ bs(unsigned long a, unsigned long b, unsigned gflag, long int level)
     bs(mid, b, gflag, level+1);
     top--;
 
-    if (level == 0)
+    if (stats && level == 0)
       puts ("");
 
     ccc = level == 0;
@@ -595,7 +595,8 @@ usage() {
   printf("Compute Archimedes' constant Pi to arbitrary accuracy.\n");
   printf("Output in different numerical bases.\n");
   printf("\ndigits: number of digits(default 100)\noutput: 1, print output. 0, suppress output(default)\nbase  : numerical base(2-62) (default 10)\n");
-  printf("\n	--help: display this help and exit\n");
+  printf("\n	--help : display this help and exit\n");
+  printf("   	--stats: display timing stats\n");
   exit(1);
 }
 
@@ -611,12 +612,18 @@ main(int argc, char *argv[])
 
   if (argc>1 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")))
 	  usage();
-  if (argc>1)
-    d = strtoul(argv[1], 0, 0);
-  if (argc>2)
-    out = atoi(argv[2]);
-  if (argc>3)
-    base = atoi(argv[3]);
+
+  int args = 0;
+  if (argc>1 && (!strcmp(argv[1], "--stats"))) {
+	  stats = 1;
+	  args += 1;
+  }
+  if (argc > 1+args)
+    d = strtoul(argv[1+args], 0, 0);
+  if (argc > 2+args)
+    out = atoi(argv[2+args]);
+  if (argc > 3+args)
+    base = atoi(argv[3+args]);
   if (base < 2 || base > 62)
     usage();
 
@@ -624,18 +631,23 @@ main(int argc, char *argv[])
   while ((1L<<depth)<terms)
     depth++;
   depth++;
-  percent = terms/100.0;
-  printf("#terms=%ld, depth=%ld\n", terms, depth);
 
-  begin = cputime();
-  printf("sieve   "); fflush(stdout);
+  if (stats) {
+	  percent = terms/100.0;
+	  printf("#terms=%ld, depth=%ld\n", terms, depth);
+
+	  begin = cputime();
+	  printf("sieve   "); fflush(stdout);
+  }
 
   sieve_size = max(3*5*23*29+1, terms*6);
   sieve = (sieve_t *)malloc(sizeof(sieve_t)*sieve_size/2);
   build_sieve(sieve_size, sieve);
 
-  mid0 = cputime();
-  printf("time = %6.3f\n", (double)(mid0-begin)/1000);
+  if (stats) {
+	  mid0 = cputime();
+	  printf("time = %6.3f\n", (double)(mid0-begin)/1000);
+  }
 
   /* allocate stacks */
   pstack = malloc(sizeof(mpz_t)*depth);
@@ -666,9 +678,11 @@ main(int argc, char *argv[])
     bs(0,terms,0,0);
   }
 
-  mid1 = cputime();
-  printf("\nbs      time = %6.3f\n", (double)(mid1-mid0)/1000);
-  printf("   gcd  time = %6.3f\n", (double)(gcd_time)/1000);
+  if (stats) {
+	  mid1 = cputime();
+	  printf("\nbs      time = %6.3f\n", (double)(mid1-mid0)/1000);
+	  printf("   gcd  time = %6.3f\n", (double)(gcd_time)/1000);
+  }
 
   /* printf("misc    "); fflush(stdout); */
 
@@ -733,31 +747,39 @@ main(int argc, char *argv[])
   /* mpf_set_prec_raw(t1, mpf_get_prec(pi)); */
 
   /* final step */
-  printf("div     ");  fflush(stdout);
+  if (stats)
+	  printf("div     ");  fflush(stdout);
   my_div(qi, pi, qi);
-  mid3 = cputime();
-  printf("time = %6.3f\n", (double)(mid3-mid2)/1000);
+  if (stats) {
+	  mid3 = cputime();
+	  printf("time = %6.3f\n", (double)(mid3-mid2)/1000);
 
-  printf("sqrt    ");  fflush(stdout);
+	  printf("sqrt    ");  fflush(stdout);
+  }
   my_sqrt_ui(pi, C);
-  mid4 = cputime();
-  printf("time = %6.3f\n", (double)(mid4-mid3)/1000);
+  if (stats) {
+	  mid4 = cputime();
+	  printf("time = %6.3f\n", (double)(mid4-mid3)/1000);
 
-  printf("mul     ");  fflush(stdout);
+	  printf("mul     ");  fflush(stdout);
+  }
   mpf_mul(qi, qi, pi);
-  end = cputime();
-  printf("time = %6.3f\n", (double)(end-mid4)/1000);
+  if (stats) {
+	  end = cputime();
+	  printf("time = %6.3f\n", (double)(end-mid4)/1000);
 
-  printf("total   time = %6.3f\n", (double)(end-begin)/1000);
-  fflush(stdout);
+	  printf("total   time = %6.3f\n", (double)(end-begin)/1000);
+	  fflush(stdout);
 
-  printf("   P size=%ld digits (%f)\n"
-	 "   Q size=%ld digits (%f)\n",
-	 psize, (double)psize/d, qsize, (double)qsize/d);
+	  printf("   P size=%ld digits (%f)\n"
+			  "   Q size=%ld digits (%f)\n",
+			  psize, (double)psize/d, qsize, (double)qsize/d);
+  }
 
   /* output Pi and timing statistics */
   if (out&1)  {
-    printf("pi(0,%ld)=\n", terms);
+	if (stats)
+		printf("pi(0,%ld)=\n", terms);
 //    mpf_out_str(stdout, 10, d+2, qi);
     mpf_out_str(stdout, base, d+2, qi);
     printf("\n");
