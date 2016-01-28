@@ -1,6 +1,6 @@
-- Rewrite the whole damn thing in decent Python
-- Replace Mathematica's ReadDigits[] with an efficient, arbitrary numerical base, \pi(or any irrational) digits generator
-- Automatically detect CPU power to determine max number of digits
+- Rewrite the whole damn thing in decent Python (plus C)
+- Replace Mathematica's ReadDigits[] with an efficient, arbitrary numerical base, \pi(or any irrational) digits generator -> gmp
+- Automatically detect CPU power / memory to determine max number of digits
 - Use multiple cores to speed up search
 - Support larger bases, (up to 256?)
 - Unicode support (accents, special chars, other alphabets)
