@@ -589,6 +589,16 @@ build_sieve(long int n, sieve_t *s)
   }
 }
 
+void
+usage() {
+  printf("Usage: %s [digits] [output] [base]\n", prog_name);
+  printf("Compute Archimedes' constant Pi to arbitrary accuracy.\n");
+  printf("Output in different numerical bases.\n");
+  printf("\ndigits: number of digits(default 100)\noutput: 1, print output. 0, suppress output(default)\nbase  : numerical base(2-62) (default 10)\n");
+  printf("\n	--help: display this help and exit\n");
+  exit(1);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -599,20 +609,16 @@ main(int argc, char *argv[])
 
   prog_name = argv[0];
 
-  if (argc>1 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h"))) {
-    printf("Usage: %s [digits] [output] [base]\n", prog_name);
-    printf("Compute Archimedes' constant Pi to arbitrary accuracy\n.");
-    printf("Print output in different numerical bases.\n");
-    printf("\ndigits: number of digits(default 100)\noutput: 1, print output. 0, suppress output(default)\nbase: numerical base(2-62)(default 10)\n");
-    printf("\n--help: display this help and exit\n");
-    exit(1);
-  }
+  if (argc>1 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")))
+	  usage();
   if (argc>1)
     d = strtoul(argv[1], 0, 0);
   if (argc>2)
     out = atoi(argv[2]);
   if (argc>3)
     base = atoi(argv[3]);
+  if (base < 2 || base > 62)
+    usage();
 
   terms = d/DIGITS_PER_ITER;
   while ((1L<<depth)<terms)
