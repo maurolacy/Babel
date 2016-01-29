@@ -38,8 +38,8 @@ then
 #    ./pi.m $D $B | tr 0-9A-Za-z "$TR"
 #    ./pi $D $B | tr 0-9A-Za-z "$TR"
     echo "Perlre: $REGEX"
-    echo "Base  : $B"
     echo "Digits: $D"
+    echo "Base  : $B"
     echo "Key   : $KEY"
     echo -n "Table : " #0-9A-Za-z $TR"
     if [ $B -gt 10 ]
