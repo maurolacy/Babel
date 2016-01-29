@@ -619,18 +619,18 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
   str = (char *) malloc(n_digits + 2 + 2) ; /* extra for minus sign and \0, and 2 more to avoid rounding*/
 
   mpf_get_str (str, &exp, base, n_digits+2, op);
-//  n_digits = strlen (str);
+  int n_computed_digits = strlen (str);
 
   written = 0;
 
   /* Write sign */
-  if (str[0] == '-')
-    {
-      str++;
-      fputc ('-', stream);
-      written = 1;
-      n_digits--;
-    }
+//  if (str[0] == '-')
+//    {
+//      str++;
+//      fputc ('-', stream);
+//      written = 1;
+//      n_digits--;
+//    }
 
 //  {
 //    const char  *point = GMP_DECIMAL_POINT;
@@ -643,8 +643,13 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
   /* Write mantissa */
   {
     size_t fwret;
-    fwret = fwrite (str, 1, n_digits, stream);
+    fwret = fwrite (str, 1, min(n_digits, n_computed_digits), stream);
     written += fwret;
+  }
+  /* Right padding with zeros */
+  while (n_computed_digits < n_digits) {
+	  putc ('0', stream);
+	  n_computed_digits++;
   }
 
   /* Write exponent */
