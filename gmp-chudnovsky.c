@@ -618,7 +618,10 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
 //  str = (char *) TMP_ALLOC (n_digits + 2); /* extra for minus sign and \0 */
   str = (char *) malloc(n_digits + 2 + 2) ; /* extra for minus sign and \0, and 2 more to avoid rounding*/
 
-  mpf_get_str (str, &exp, base, n_digits+2, op);
+  if (base <= 10 || base > 36)
+	  mpf_get_str (str, &exp, base, n_digits+2, op);
+  else  // Select proper charset table
+	  mpf_get_str (str, &exp, -base, n_digits+2, op);
   int n_computed_digits = strlen (str);
 
   written = 0;
