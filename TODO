@@ -1,5 +1,6 @@
 - Fix translation table: gmp bases less than 36 are 0-9a-z instead of 0-9A-Z
 - Fix trailing(i.e. right) zeros: gmp doesn't print them
+- Write some regression tests, for a start
 - Rewrite the whole damn thing in Python
 - Automatically detect CPU power / memory to determine max number of digits
 - Use multiple cores to speed up search
