@@ -26,4 +26,4 @@ Ex.: search for "Hello, world!" in the digits of Pi
     Key   : 9788046502813
     Table : 0-9 odr\!,w\ elH
 
-    ./pi 274656 | tr 0-9 odr\!,w\ elH # Output result
+    ./pi 274656 10 | tr 0-9 odr\!,w\ elH # Outputs result
