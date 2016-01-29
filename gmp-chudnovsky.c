@@ -615,9 +615,9 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
      * Implement more/other allocation reductions tricks.  */
 
 //  str = (char *) TMP_ALLOC (n_digits + 2); /* extra for minus sign and \0 */
-  str = (char *) malloc(n_digits + 2); /* extra for minus sign and \0 */
+  str = (char *) malloc(n_digits + 3); /* extra for minus sign and \0 and to avoid rounding*/
 
-  mpf_get_str (str, &exp, base, n_digits, op);
+  mpf_get_str (str, &exp, base, n_digits+1, op);
 //  n_digits = strlen (str);
 
   written = 0;
@@ -699,6 +699,8 @@ main(int argc, char *argv[])
     base = atoi(argv[3+args]);
   if (base < 2 || base > 62)
     usage();
+  if (base <= 3)
+	  out_digits += 1; // integer part takes two digits
 
   terms = d/DIGITS_PER_ITER;
   while ((1L<<depth)<terms)
