@@ -433,7 +433,7 @@ fac_remove_gcd(mpz_t p, fac_t fp, mpz_t g, fac_t fg)
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
-int      out=0, stats=0;
+int      out=1, stats=0;
 mpz_t   *pstack, *qstack, *gstack;
 fac_t  *fpstack, *fgstack;
 long int      top = 0;
@@ -661,12 +661,14 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
 
 void
 usage() {
-  printf("Usage: %s [digits] [output] [base]\n", prog_name);
+  printf("Usage: %s [digits] [base]\n", prog_name);
   printf("Compute Archimedes' constant Pi to arbitrary accuracy.\n");
   printf("Output in different numerical bases.\n");
-  printf("\ndigits: number of digits(default 100)\noutput: 1, print output. 0, suppress output(default)\nbase  : numerical base(2-62) (default 10)\n");
+  printf("\ndigits: number of digits(default 100)\nbase  : numerical base(2-62) (default 10)\n");
   printf("\n	--help : display this help and exit\n");
   printf("   	--stats: display timing stats\n");
+  printf("   	--no-output: supress digits output\n");
+  printf("   	--fac-output: show factors\n");
   exit(1);
 }
 
@@ -684,20 +686,33 @@ main(int argc, char *argv[])
 	  usage();
 
   int args = 0;
-  if (argc>1 && (!strcmp(argv[1], "--stats"))) {
-	  stats = 1;
-	  args += 1;
+  while (argc-args > 1) {
+	  if (!strcmp(argv[1+args], "--stats")) {
+		  stats = 1;
+		  args += 1;
+		  continue;
+	  }
+	  if (!strcmp(argv[1+args], "--no-output")) {
+		  out   &= !1;
+		  args += 1;
+		  continue;
+	  }
+	  if (!strcmp(argv[1+args], "--fac-output")) {
+		  out   |= 2;
+		  args += 1;
+		  continue;
+	  }
+	  break;
   }
+
   if (argc > 1+args)
     d = strtoul(argv[1+args], 0, 0);
   out_digits = d;
   if (argc > 2+args)
-    out = atoi(argv[2+args]);
-  if (argc > 3+args)
-    base = atoi(argv[3+args]);
+    base = atoi(argv[2+args]);
   if (base < 2 || base > 62)
     usage();
-  if (d<15) // Avoid floating point exception
+  if (d < 15) // Avoid floating point exception
 	  d = 15;
   if (base > 10)
 	  d *= log(base)/log(10); // Correct number of digits, for given base
