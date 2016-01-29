@@ -15,7 +15,7 @@ Install/Usage:
     ./BabelSearch.sh 'phrase' # Search for 'phrase' in the digits of Pi
     ./pi <digits> <base> | tr <table> # Using BabelSearch.sh reported values
 
-Ex.: Search for "Hello, world!" in the digits of Pi:
+Ex.: search for "Hello, world!" in the digits of Pi
 
     ./BabelSearch.sh 'Hello, world!'
     Hello, world!
