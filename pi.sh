@@ -9,4 +9,4 @@ R="$2"
 M="$3"
 [ -z "$M" ] && M=1000000
 #./pi.m $M $B | sed 's/^"//;s/"$//' | perl -pe $R
-./pi $M 1 $B | perl -pe $R
+./pi $M $B | perl -pe $R
