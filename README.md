@@ -1,3 +1,4 @@
+BabelSearch:
 Search for arbitrary strings in the digits of Pi.
 Inspired by Jorge Luis Borges's [[1]] short story, "La Biblioteca de Babel." [[2]]
 
