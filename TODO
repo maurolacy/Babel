@@ -1,4 +1,5 @@
-- Rewrite the whole damn thing in decent Python (plus C)
+- Fix translation table: gmp bases less than 36 are 0-9a-z instead of 0-9A-Z
+- Rewrite the whole damn thing in Python
 - Automatically detect CPU power / memory to determine max number of digits
 - Use multiple cores to speed up search
 - Support larger bases, (up to 256?)
