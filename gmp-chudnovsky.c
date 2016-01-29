@@ -38,7 +38,8 @@
 #define C   640320
 #define D   12
 
-#define BITS_PER_DIGIT   3.32192809488736234787
+//#define BITS_PER_DIGIT   3.32192809488736234787
+#define BITS_PER_DIGIT   (log(base)/log(2))
 #define DIGITS_PER_ITER  14.1816474627254776555
 #define DOUBLE_PREC      53
 
@@ -615,9 +616,9 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
      * Implement more/other allocation reductions tricks.  */
 
 //  str = (char *) TMP_ALLOC (n_digits + 2); /* extra for minus sign and \0 */
-  str = (char *) malloc(n_digits + 3); /* extra for minus sign and \0 and to avoid rounding*/
+  str = (char *) malloc(n_digits + 2 + 2) ; /* extra for minus sign and \0, and 2 more to avoid rounding*/
 
-  mpf_get_str (str, &exp, base, n_digits+1, op);
+  mpf_get_str (str, &exp, base, n_digits+2, op);
 //  n_digits = strlen (str);
 
   written = 0;
@@ -689,18 +690,17 @@ main(int argc, char *argv[])
   }
   if (argc > 1+args)
     d = strtoul(argv[1+args], 0, 0);
-  d += 1; // 3
   out_digits = d;
-  if (d<15) // avoid floating point exception
-	  d = 15;
   if (argc > 2+args)
     out = atoi(argv[2+args]);
   if (argc > 3+args)
     base = atoi(argv[3+args]);
   if (base < 2 || base > 62)
     usage();
-  if (base <= 3)
-	  out_digits += 1; // integer part takes two digits
+  if (d<15) // Avoid floating point exception
+	  d = 15;
+  if (base > 10)
+	  d *= log(base)/log(10); // Correct number of digits, for given base
 
   terms = d/DIGITS_PER_ITER;
   while ((1L<<depth)<terms)
