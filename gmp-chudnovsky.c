@@ -5,7 +5,7 @@
  * Slightly modified 2005 by Torbjorn Granlund to allow more than 2G
  digits to be computed.
 
- * Modified 2016 by Mauro Lacy to support add multiple numerical bases.
+ * Modified 2016 by Mauro Lacy to support different numerical bases.
 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
