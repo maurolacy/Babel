@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <getopt.h>
 #include "gmp.h"
 
 #define A   13591409
@@ -692,34 +693,55 @@ main(int argc, char *argv[])
 
   prog_name = argv[0];
 
-  if (argc>1 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")))
-	  usage();
+  int c;
+  int digit_optind = 0;
 
-  int args = 0;
-  while (argc-args > 1) {
-	  if (!strcmp(argv[1+args], "--stats")) {
-		  stats = 1;
-		  args += 1;
-		  continue;
-	  }
-	  if (!strcmp(argv[1+args], "--no-output")) {
-		  out   &= !1;
-		  args += 1;
-		  continue;
-	  }
-	  if (!strcmp(argv[1+args], "--fac-output")) {
-		  out   |= 2;
-		  args += 1;
-		  continue;
-	  }
-	  break;
+  prog_name = argv[0];
+
+  while (1) {
+    int this_option_optind = optind ? optind : 1;
+    int option_index = 0;
+    static struct option long_options[] = {
+        {"help",       no_argument, 0,  0 },
+        {"stats",      no_argument,  0,  0 },
+        {"no-output",  no_argument,  0,  0 },
+        {"fac-output", no_argument,  0,  0 },
+        { 0,           0,            0,  0 }
+    };
+
+    c = getopt_long(argc, argv, "h", long_options, &option_index);
+    if (c == -1)
+        break;
+
+    switch (c) {
+    case 0:
+      if (option_index == 0) // help
+        usage();
+      if (option_index == 1) // stats
+        stats = 1;
+      if (option_index == 2) // no-output
+        out  &= ~1;
+      if (option_index == 3) // fac-output
+        out  |= 2;
+      break;
+    case '?':
+    case 'h':
+    default:
+      usage();
+    }
   }
 
-  if (argc > 1+args)
-    d = strtoul(argv[1+args], 0, 0);
+  if (optind < argc) {
+    d = strtoul(argv[optind], 0, 0);
+    optind++;
+  }
   out_digits = d;
-  if (argc > 2+args)
-    base = atoi(argv[2+args]);
+  if (optind < argc) {
+    base = atoi(argv[optind]);
+    optind++;
+  }
+  if (optind < argc)
+    usage();
   if (base < 2 || base > 62)
     usage();
   if (d < 15) // Avoid floating point exception
