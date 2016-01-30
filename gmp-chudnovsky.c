@@ -3,9 +3,9 @@
  * Copyright 2002, 2005 Hanhong Xue (macroxue at yahoo dot com)
 
  * Slightly modified 2005 by Torbjorn Granlund to allow more than 2G
-   digits to be computed.
+ digits to be computed.
 
- * Modified 2016 by Mauro Lacy to support multiple numerical bases output.
+ * Modified 2016 by Mauro Lacy to support add multiple numerical bases.
 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,12 +54,12 @@ char *prog_name;
 
 #if CHECK_MEMUSAGE
 #undef CHECK_MEMUSAGE
-#define CHECK_MEMUSAGE							\
-  do {									\
-    char buf[100];							\
-    snprintf (buf, 100,							\
-	      "ps aguxw | grep '[%c]%s'", prog_name[0], prog_name+1);	\
-    system (buf);							\
+#define CHECK_MEMUSAGE  \
+  do {                  \
+    char buf[100];      \
+    snprintf (buf, 100, \
+        "ps aguxw | grep '[%c]%s'", prog_name[0], prog_name+1); \
+    system (buf);       \
   } while (0)
 #else
 #undef CHECK_MEMUSAGE
@@ -70,8 +70,8 @@ char *prog_name;
 /* Return user CPU time measured in milliseconds.  */
 
 #if !defined (__sun) \
-    && (defined (USG) || defined (__SVR4) || defined (_UNICOS) \
-	|| defined (__hpux))
+  && (defined (USG) || defined (__SVR4) || defined (_UNICOS) \
+  || defined (__hpux))
 int
 cputime ()
 {
@@ -124,22 +124,22 @@ my_sqrt_ui(mpf_t r, unsigned long x)
     {
       prec *=2;
       if (prec<prec0)
-	{
-	  /* t1 = t1+t1*(1-x*t1*t1)/2; */
-	  mpf_set_prec_raw(t2, prec);
-	  mpf_mul(t2, t1, t1);         /* half x half -> full */
-	  mpf_mul_ui(t2, t2, x);
-	  mpf_ui_sub(t2, 1, t2);
-	  mpf_set_prec_raw(t2, prec/2);
-	  mpf_div_2exp(t2, t2, 1);
-	  mpf_mul(t2, t2, t1);         /* half x half -> half */
-	  mpf_set_prec_raw(t1, prec);
-	  mpf_add(t1, t1, t2);
-	}
+  {
+    /* t1 = t1+t1*(1-x*t1*t1)/2; */
+    mpf_set_prec_raw(t2, prec);
+    mpf_mul(t2, t1, t1);         /* half x half -> full */
+    mpf_mul_ui(t2, t2, x);
+    mpf_ui_sub(t2, 1, t2);
+    mpf_set_prec_raw(t2, prec/2);
+    mpf_div_2exp(t2, t2, 1);
+    mpf_mul(t2, t2, t1);         /* half x half -> half */
+    mpf_set_prec_raw(t1, prec);
+    mpf_add(t1, t1, t2);
+  }
       else
-	{
-	  break;
-	}
+  {
+    break;
+  }
       prec -= (bits&1);
       bits /=2;
     }
@@ -358,8 +358,8 @@ fac_compact(fac_t f)
   for (i=0, j=0; i<f[0].num_facs; i++) {
     if (f[0].pow[i]>0) {
       if (j<i) {
-	      f[0].fac[j] = f[0].fac[i];
-	f[0].pow[j] = f[0].pow[i];
+        f[0].fac[j] = f[0].fac[i];
+  f[0].pow[j] = f[0].pow[i];
       }
       j++;
     }
@@ -376,7 +376,7 @@ bs_mul(mpz_t r, long int a, long int b)
     mpz_set_ui(r, 1);
     for (i=a; i<b; i++)
       for (j=0; j<fmul[0].pow[i]; j++)
-	mpz_mul_ui(r, r, fmul[0].fac[i]);
+  mpz_mul_ui(r, r, fmul[0].fac[i]);
   } else {
     mpz_t r2;
     mpz_init(r2);
@@ -488,13 +488,13 @@ bs(unsigned long a, unsigned long b, unsigned gflag, long int level)
 
     i=b;
     while ((i&1)==0) i>>=1;
-    fac_set_bp(fp1, i, 3);	/*  b^3 */
+    fac_set_bp(fp1, i, 3);  /*  b^3 */
     fac_mul_bp(fp1, 3*5*23*29, 3);
     fp1[0].pow[0]--;
 
-    fac_set_bp(fg1, 2*b-1, 1);	/* 2b-1 */
-    fac_mul_bp(fg1, 6*b-1, 1);	/* 6b-1 */
-    fac_mul_bp(fg1, 6*b-5, 1);	/* 6b-5 */
+    fac_set_bp(fg1, 2*b-1, 1);  /* 2b-1 */
+    fac_mul_bp(fg1, 6*b-1, 1);  /* 6b-1 */
+    fac_mul_bp(fg1, 6*b-5, 1);  /* 6b-5 */
 
     if (stats && b>(int)(progress)) {
       printf("."); fflush(stdout);
@@ -576,18 +576,18 @@ build_sieve(long int n, sieve_t *s)
       s[i/2].fac = i;
       s[i/2].pow = 1;
       if (i<=m) {
-	for (j=i*i, k=i/2; j<=n; j+=i+i, k++) {
-	  if (s[j/2].fac==0) {
-	    s[j/2].fac = i;
-	    if (s[k].fac == i) {
-	      s[j/2].pow = s[k].pow + 1;
-	      s[j/2].nxt = s[k].nxt;
-	    } else {
-	      s[j/2].pow = 1;
-	      s[j/2].nxt = k;
-	    }
-	  }
-	}
+  for (j=i*i, k=i/2; j<=n; j+=i+i, k++) {
+    if (s[j/2].fac==0) {
+      s[j/2].fac = i;
+      if (s[k].fac == i) {
+        s[j/2].pow = s[k].pow + 1;
+        s[j/2].nxt = s[k].nxt;
+      } else {
+        s[j/2].pow = 1;
+        s[j/2].nxt = k;
+      }
+    }
+  }
       }
     }
   }
@@ -622,9 +622,9 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
   str = (char *) malloc(n_digits + 2 + 2) ; /* extra for minus sign and \0, and 2 more to avoid rounding*/
 
   if (base <= 10 || base > 36)
-	  mpf_get_str (str, &exp, base, n_digits+2, op);
+    mpf_get_str (str, &exp, base, n_digits+2, op);
   else  // Select proper charset table
-	  mpf_get_str (str, &exp, -base, n_digits+2, op);
+    mpf_get_str (str, &exp, -base, n_digits+2, op);
   int n_computed_digits = strlen (str);
 
   written = 0;
@@ -654,8 +654,8 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
   }
   /* Right padding with zeros */
   while (n_computed_digits < n_digits) {
-	  putc ('0', stream);
-	  n_computed_digits++;
+    putc ('0', stream);
+    n_computed_digits++;
   }
 
   /* Write exponent */
@@ -675,11 +675,11 @@ usage() {
   printf("Usage: %s [digits] [base]\n", prog_name);
   printf("Compute Archimedes' constant Pi to arbitrary accuracy.\n");
   printf("Output in different numerical bases.\n");
-  printf("\ndigits: number of digits(default 100)\nbase  : numerical base(2-62) (default 10)\n");
-  printf("\n	--help : display this help and exit\n");
-  printf("   	--stats: display timing stats\n");
-  printf("   	--no-output: supress digits output\n");
-  printf("   	--fac-output: show factors\n");
+  printf("\ndigits: number of digits(default 100)\nbase  : numerical base(2-62) (default 10)\n\n");
+  printf("      --help          display this help and exit\n");
+  printf("      --stats         display timing stats\n");
+  printf("      --no-output     supress digits output\n");
+  printf("      --fac-output    show factors\n");
   exit(1);
 }
 
@@ -745,9 +745,9 @@ main(int argc, char *argv[])
   if (base < 2 || base > 62)
     usage();
   if (d < 15) // Avoid floating point exception
-	  d = 15;
+    d = 15;
   if (base > 10)
-	  d *= log(base)/log(10); // Correct number of digits, for given base
+    d *= log(base)/log(10); // Correct number of digits, for given base
 
   terms = d/DIGITS_PER_ITER;
   while ((1L<<depth)<terms)
@@ -755,11 +755,11 @@ main(int argc, char *argv[])
   depth++;
 
   if (stats) {
-	  percent = terms/100.0;
-	  printf("#terms=%ld, depth=%ld\n", terms, depth);
+    percent = terms/100.0;
+    printf("#terms=%ld, depth=%ld\n", terms, depth);
 
-	  begin = cputime();
-	  printf("sieve   "); fflush(stdout);
+    begin = cputime();
+    printf("sieve   "); fflush(stdout);
   }
 
   sieve_size = max(3*5*23*29+1, terms*6);
@@ -767,8 +767,8 @@ main(int argc, char *argv[])
   build_sieve(sieve_size, sieve);
 
   if (stats) {
-	  mid0 = cputime();
-	  printf("time = %6.3f\n", (double)(mid0-begin)/1000);
+    mid0 = cputime();
+    printf("time = %6.3f\n", (double)(mid0-begin)/1000);
   }
 
   /* allocate stacks */
@@ -801,9 +801,9 @@ main(int argc, char *argv[])
   }
 
   if (stats) {
-	  mid1 = cputime();
-	  printf("\nbs      time = %6.3f\n", (double)(mid1-mid0)/1000);
-	  printf("   gcd  time = %6.3f\n", (double)(gcd_time)/1000);
+    mid1 = cputime();
+    printf("\nbs      time = %6.3f\n", (double)(mid1-mid0)/1000);
+    printf("   gcd  time = %6.3f\n", (double)(gcd_time)/1000);
   }
 
   /* printf("misc    "); fflush(stdout); */
@@ -838,9 +838,9 @@ main(int argc, char *argv[])
   mpf_set_default_prec((long int)(d*BITS_PER_DIGIT+16));
 
   /*
-	  p*(C/D)*sqrt(C)
+    p*(C/D)*sqrt(C)
     pi = -----------------
-	     (q+A*p)
+       (q+A*p)
   */
 
   psize = mpz_sizeinbase(p1,10);
@@ -870,38 +870,38 @@ main(int argc, char *argv[])
 
   /* final step */
   if (stats)
-	  printf("div     ");  fflush(stdout);
+    printf("div     ");  fflush(stdout);
   my_div(qi, pi, qi);
   if (stats) {
-	  mid3 = cputime();
-	  printf("time = %6.3f\n", (double)(mid3-mid2)/1000);
+    mid3 = cputime();
+    printf("time = %6.3f\n", (double)(mid3-mid2)/1000);
 
-	  printf("sqrt    ");  fflush(stdout);
+    printf("sqrt    ");  fflush(stdout);
   }
   my_sqrt_ui(pi, C);
   if (stats) {
-	  mid4 = cputime();
-	  printf("time = %6.3f\n", (double)(mid4-mid3)/1000);
+    mid4 = cputime();
+    printf("time = %6.3f\n", (double)(mid4-mid3)/1000);
 
-	  printf("mul     ");  fflush(stdout);
+    printf("mul     ");  fflush(stdout);
   }
   mpf_mul(qi, qi, pi);
   if (stats) {
-	  end = cputime();
-	  printf("time = %6.3f\n", (double)(end-mid4)/1000);
+    end = cputime();
+    printf("time = %6.3f\n", (double)(end-mid4)/1000);
 
-	  printf("total   time = %6.3f\n", (double)(end-begin)/1000);
-	  fflush(stdout);
+    printf("total   time = %6.3f\n", (double)(end-begin)/1000);
+    fflush(stdout);
 
-	  printf("   P size=%ld digits (%f)\n"
-			  "   Q size=%ld digits (%f)\n",
-			  psize, (double)psize/d, qsize, (double)qsize/d);
+    printf("   P size=%ld digits (%f)\n"
+        "   Q size=%ld digits (%f)\n",
+        psize, (double)psize/d, qsize, (double)qsize/d);
   }
 
   /* output Pi and timing statistics */
-  if (out&1)  {
-	if (stats)
-		printf("pi(0,%ld)=\n", terms);
+  if (out&1) {
+    if (stats)
+      printf("pi(0,%ld)=\n", terms);
 //    mpf_out_str(stdout, 10, d+2, qi);
     my_out_str(stdout, base, out_digits, qi);
     printf("\n");
