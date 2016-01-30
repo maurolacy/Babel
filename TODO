@@ -2,5 +2,6 @@
 - Rewrite the whole damn thing in Python
 - Automatically detect CPU power / memory to determine max number of digits
 - Use multiple cores to speed up search
+- Offline version, i.e. regex search in previously generated files (1 billion digits search)
 - Support larger bases, (up to 256?)
 - Unicode support (accents, special chars, other alphabets)
