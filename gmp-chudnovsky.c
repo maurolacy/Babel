@@ -66,7 +66,6 @@ char *prog_name;
 #define CHECK_MEMUSAGE
 #endif
 
-
 /* Return user CPU time measured in milliseconds.  */
 
 #if !defined (__sun) \
@@ -83,11 +82,11 @@ cputime ()
 #include <sys/resource.h>
 
 int
-cputime ()
+cputime()
 {
   struct rusage rus;
 
-  getrusage (0, &rus);
+  getrusage(0, &rus);
   return rus.ru_utime.tv_sec * 1000 + rus.ru_utime.tv_usec / 1000;
 }
 #endif
@@ -104,51 +103,45 @@ my_sqrt_ui(mpf_t r, unsigned long x)
 
   prec0 = mpf_get_prec(r);
 
-  if (prec0<=DOUBLE_PREC) {
+  if (prec0 <= DOUBLE_PREC) {
     mpf_set_d(r, sqrt(x));
     return;
   }
 
   bits = 0;
-  for (prec=prec0; prec>DOUBLE_PREC;)
-    {
-      int bit = prec&1;
-      prec = (prec+bit)/2;
-      bits = bits*2+bit;
-    }
+  for (prec = prec0; prec > DOUBLE_PREC;) {
+    int bit = prec & 1;
+    prec = (prec + bit) / 2;
+    bits = bits * 2 + bit;
+  }
 
   mpf_set_prec_raw(t1, DOUBLE_PREC);
-  mpf_set_d(t1, 1/sqrt(x));
+  mpf_set_d(t1, 1 / sqrt(x));
 
-  while (prec<prec0)
-    {
-      prec *=2;
-      if (prec<prec0)
-  {
-    /* t1 = t1+t1*(1-x*t1*t1)/2; */
-    mpf_set_prec_raw(t2, prec);
-    mpf_mul(t2, t1, t1);         /* half x half -> full */
-    mpf_mul_ui(t2, t2, x);
-    mpf_ui_sub(t2, 1, t2);
-    mpf_set_prec_raw(t2, prec/2);
-    mpf_div_2exp(t2, t2, 1);
-    mpf_mul(t2, t2, t1);         /* half x half -> half */
-    mpf_set_prec_raw(t1, prec);
-    mpf_add(t1, t1, t2);
-  }
-      else
-  {
-    break;
-  }
-      prec -= (bits&1);
-      bits /=2;
+  while (prec < prec0) {
+    prec *= 2;
+    if (prec < prec0) {
+      /* t1 = t1+t1*(1-x*t1*t1)/2; */mpf_set_prec_raw(t2, prec);
+      mpf_mul(t2, t1, t1); /* half x half -> full */
+      mpf_mul_ui(t2, t2, x);
+      mpf_ui_sub(t2, 1, t2);
+      mpf_set_prec_raw(t2, prec / 2);
+      mpf_div_2exp(t2, t2, 1);
+      mpf_mul(t2, t2, t1); /* half x half -> half */
+      mpf_set_prec_raw(t1, prec);
+      mpf_add(t1, t1, t2);
     }
-  /* t2=x*t1, t1 = t2+t1*(x-t2*t2)/2; */
-  mpf_set_prec_raw(t2, prec0/2);
+    else {
+      break;
+    }
+    prec -= (bits & 1);
+    bits /= 2;
+  }
+  /* t2=x*t1, t1 = t2+t1*(x-t2*t2)/2; */mpf_set_prec_raw(t2, prec0 / 2);
   mpf_mul_ui(t2, t1, x);
-  mpf_mul(r, t2, t2);          /* half x half -> full */
+  mpf_mul(r, t2, t2); /* half x half -> full */
   mpf_ui_sub(r, x, r);
-  mpf_mul(t1, t1, r);          /* half x half -> half */
+  mpf_mul(t1, t1, r); /* half x half -> half */
   mpf_div_2exp(t1, t1, 1);
   mpf_add(r, t1, t2);
 }
@@ -184,20 +177,21 @@ my_div(mpf_t r, mpf_t y, mpf_t x)
     if (prec<prec0) {
       /* t1 = t1+t1*(1-x*t1); */
       mpf_set_prec_raw(t2, prec);
-      mpf_mul(t2, x, t1);          /* full x half -> full */
+      mpf_mul(t2, x, t1); /* full x half -> full */
       mpf_ui_sub(t2, 1, t2);
       mpf_set_prec_raw(t2, prec/2);
-      mpf_mul(t2, t2, t1);         /* half x half -> half */
+      mpf_mul(t2, t2, t1); /* half x half -> half */
       mpf_set_prec_raw(t1, prec);
       mpf_add(t1, t1, t2);
-    } else {
+    }
+    else {
       prec = prec0;
       /* t2=y*t1, t1 = t2+t1*(y-x*t2); */
       mpf_set_prec_raw(t2, prec/2);
-      mpf_mul(t2, t1, y);          /* half x half -> half */
-      mpf_mul(r, x, t2);           /* full x half -> full */
+      mpf_mul(t2, t1, y); /* half x half -> half */
+      mpf_mul(r, x, t2); /* full x half -> full */
       mpf_sub(r, y, r);
-      mpf_mul(t1, t1, r);          /* half x half -> half */
+      mpf_mul(t1, t1, r); /* half x half -> half */
       mpf_add(r, t1, t2);
       break;
     }
@@ -227,7 +221,7 @@ typedef struct {
 
 sieve_t *sieve;
 long int sieve_size;
-fac_t   ftmp, fmul;
+fac_t ftmp, fmul;
 
 #define INIT_FACS 32
 
@@ -235,8 +229,8 @@ void
 fac_show(fac_t f)
 {
   long int i;
-  for (i=0; i<f[0].num_facs; i++)
-    if (f[0].pow[i]==1)
+  for (i = 0; i < f[0].num_facs; i++)
+    if (f[0].pow[i] == 1)
       printf("%ld ", f[0].fac[i]);
     else
       printf("%ld^%ld ", f[0].fac[i], f[0].pow[i]);
@@ -252,11 +246,11 @@ fac_reset(fac_t f)
 inline void
 fac_init_size(fac_t f, long int s)
 {
-  if (s<INIT_FACS)
-    s=INIT_FACS;
+  if (s < INIT_FACS)
+    s = INIT_FACS;
 
-  f[0].fac  = malloc(s*sizeof(unsigned long)*2);
-  f[0].pow  = f[0].fac + s;
+  f[0].fac = malloc(s * sizeof(unsigned long) * 2);
+  f[0].pow = f[0].fac + s;
   f[0].max_facs = s;
 
   fac_reset(f);
@@ -283,46 +277,47 @@ fac_resize(fac_t f, long int s)
   }
 }
 
-/* f = base^pow */
-inline void
+/* f = base^pow */inline void
 fac_set_bp(fac_t f, unsigned long base, long int pow)
 {
   long int i;
   assert(base<sieve_size);
-  for (i=0, base/=2; base>0; i++, base = sieve[base].nxt) {
+  for (i = 0, base /= 2; base > 0; i++, base = sieve[base].nxt) {
     f[0].fac[i] = sieve[base].fac;
-    f[0].pow[i] = sieve[base].pow*pow;
+    f[0].pow[i] = sieve[base].pow * pow;
   }
   f[0].num_facs = i;
   assert(i<=f[0].max_facs);
 }
 
-/* r = f*g */
-inline void
+/* r = f*g */inline void
 fac_mul2(fac_t r, fac_t f, fac_t g)
 {
   long int i, j, k;
 
-  for (i=j=k=0; i<f[0].num_facs && j<g[0].num_facs; k++) {
+  for (i = j = k = 0; i < f[0].num_facs && j < g[0].num_facs; k++) {
     if (f[0].fac[i] == g[0].fac[j]) {
       r[0].fac[k] = f[0].fac[i];
       r[0].pow[k] = f[0].pow[i] + g[0].pow[j];
-      i++; j++;
-    } else if (f[0].fac[i] < g[0].fac[j]) {
+      i++;
+      j++;
+    }
+    else if (f[0].fac[i] < g[0].fac[j]) {
       r[0].fac[k] = f[0].fac[i];
       r[0].pow[k] = f[0].pow[i];
       i++;
-    } else {
+    }
+    else {
       r[0].fac[k] = g[0].fac[j];
       r[0].pow[k] = g[0].pow[j];
       j++;
     }
   }
-  for (; i<f[0].num_facs; i++, k++) {
+  for (; i < f[0].num_facs; i++, k++) {
     r[0].fac[k] = f[0].fac[i];
     r[0].pow[k] = f[0].pow[i];
   }
-  for (; j<g[0].num_facs; j++, k++) {
+  for (; j < g[0].num_facs; j++, k++) {
     r[0].fac[k] = g[0].fac[j];
     r[0].pow[k] = g[0].pow[j];
   }
@@ -330,36 +325,33 @@ fac_mul2(fac_t r, fac_t f, fac_t g)
   assert(k<=r[0].max_facs);
 }
 
-/* f *= g */
-inline void
+/* f *= g */inline void
 fac_mul(fac_t f, fac_t g)
 {
   fac_t tmp;
   fac_resize(fmul, f[0].num_facs + g[0].num_facs);
   fac_mul2(fmul, f, g);
-  tmp[0]  = f[0];
-  f[0]    = fmul[0];
+  tmp[0] = f[0];
+  f[0] = fmul[0];
   fmul[0] = tmp[0];
 }
 
-/* f *= base^pow */
-inline void
+/* f *= base^pow */inline void
 fac_mul_bp(fac_t f, unsigned long base, unsigned long pow)
 {
   fac_set_bp(ftmp, base, pow);
   fac_mul(f, ftmp);
 }
 
-/* remove factors of power 0 */
-inline void
+/* remove factors of power 0 */inline void
 fac_compact(fac_t f)
 {
   long int i, j;
-  for (i=0, j=0; i<f[0].num_facs; i++) {
-    if (f[0].pow[i]>0) {
-      if (j<i) {
+  for (i = 0, j = 0; i < f[0].num_facs; i++) {
+    if (f[0].pow[i] > 0) {
+      if (j < i) {
         f[0].fac[j] = f[0].fac[i];
-  f[0].pow[j] = f[0].pow[i];
+        f[0].pow[j] = f[0].pow[i];
       }
       j++;
     }
@@ -372,22 +364,23 @@ void
 bs_mul(mpz_t r, long int a, long int b)
 {
   long int i, j;
-  if (b-a<=32) {
+  if (b - a <= 32) {
     mpz_set_ui(r, 1);
-    for (i=a; i<b; i++)
-      for (j=0; j<fmul[0].pow[i]; j++)
-  mpz_mul_ui(r, r, fmul[0].fac[i]);
-  } else {
+    for (i = a; i < b; i++)
+      for (j = 0; j < fmul[0].pow[i]; j++)
+        mpz_mul_ui(r, r, fmul[0].fac[i]);
+  }
+  else {
     mpz_t r2;
     mpz_init(r2);
-    bs_mul(r2, a, (a+b)/2);
-    bs_mul(r, (a+b)/2, b);
+    bs_mul(r2, a, (a + b) / 2);
+    bs_mul(r, (a + b) / 2, b);
     mpz_mul(r, r, r2);
     mpz_clear(r2);
   }
 }
 
-mpz_t    gcd, mgcd;
+mpz_t gcd, mgcd;
 
 #if HAVE_DIVEXACT_PREINV
 void mpz_invert_mod_2exp (mpz_ptr, mpz_srcptr);
@@ -401,17 +394,21 @@ fac_remove_gcd(mpz_t p, fac_t fp, mpz_t g, fac_t fg)
 {
   long int i, j, k, c;
   fac_resize(fmul, min(fp->num_facs, fg->num_facs));
-  for (i=j=k=0; i<fp->num_facs && j<fg->num_facs; ) {
+  for (i = j = k = 0; i < fp->num_facs && j < fg->num_facs;) {
     if (fp->fac[i] == fg->fac[j]) {
       c = min(fp->pow[i], fg->pow[j]);
       fp->pow[i] -= c;
       fg->pow[j] -= c;
       fmul->fac[k] = fp->fac[i];
       fmul->pow[k] = c;
-      i++; j++; k++;
-    } else if (fp->fac[i] < fg->fac[j]) {
       i++;
-    } else {
+      j++;
+      k++;
+    }
+    else if (fp->fac[i] < fg->fac[j]) {
+      i++;
+    }
+    else {
       j++;
     }
   }
@@ -436,11 +433,11 @@ fac_remove_gcd(mpz_t p, fac_t fp, mpz_t g, fac_t fg)
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
-int      out=1, stats=0;
-mpz_t   *pstack, *qstack, *gstack;
-fac_t  *fpstack, *fgstack;
-long int      top = 0;
-double   progress=0, percent;
+int out = 1, stats = 0;
+mpz_t *pstack, *qstack, *gstack;
+fac_t *fpstack, *fgstack;
+long int top = 0;
+double progress = 0, percent;
 
 #define p1 (pstack[top])
 #define q1 (qstack[top])
@@ -463,65 +460,68 @@ bs(unsigned long a, unsigned long b, unsigned gflag, long int level)
   unsigned long i, mid;
   int ccc;
 
-  if (b-a==1) {
+  if (b - a == 1) {
     /*
-      g(b-1,b) = (6b-5)(2b-1)(6b-1)
-      p(b-1,b) = b^3 * C^3 / 24
-      q(b-1,b) = (-1)^b*g(b-1,b)*(A+Bb).
-    */
-    mpz_set_ui(p1, b);
+     g(b-1,b) = (6b-5)(2b-1)(6b-1)
+     p(b-1,b) = b^3 * C^3 / 24
+     q(b-1,b) = (-1)^b*g(b-1,b)*(A+Bb).
+     */mpz_set_ui(p1, b);
     mpz_mul_ui(p1, p1, b);
     mpz_mul_ui(p1, p1, b);
-    mpz_mul_ui(p1, p1, (C/24)*(C/24));
-    mpz_mul_ui(p1, p1, C*24);
+    mpz_mul_ui(p1, p1, (C / 24) * (C / 24));
+    mpz_mul_ui(p1, p1, C * 24);
 
-    mpz_set_ui(g1, 2*b-1);
-    mpz_mul_ui(g1, g1, 6*b-1);
-    mpz_mul_ui(g1, g1, 6*b-5);
+    mpz_set_ui(g1, 2 * b - 1);
+    mpz_mul_ui(g1, g1, 6 * b - 1);
+    mpz_mul_ui(g1, g1, 6 * b - 5);
 
     mpz_set_ui(q1, b);
     mpz_mul_ui(q1, q1, B);
     mpz_add_ui(q1, q1, A);
-    mpz_mul   (q1, q1, g1);
-    if (b%2)
+    mpz_mul(q1, q1, g1);
+    if (b % 2)
       mpz_neg(q1, q1);
 
-    i=b;
-    while ((i&1)==0) i>>=1;
-    fac_set_bp(fp1, i, 3);  /*  b^3 */
-    fac_mul_bp(fp1, 3*5*23*29, 3);
+    i = b;
+    while ((i & 1) == 0)
+      i >>= 1;
+    fac_set_bp(fp1, i, 3); /*  b^3 */
+    fac_mul_bp(fp1, 3 * 5 * 23 * 29, 3);
     fp1[0].pow[0]--;
 
-    fac_set_bp(fg1, 2*b-1, 1);  /* 2b-1 */
-    fac_mul_bp(fg1, 6*b-1, 1);  /* 6b-1 */
-    fac_mul_bp(fg1, 6*b-5, 1);  /* 6b-5 */
+    fac_set_bp(fg1, 2 * b - 1, 1); /* 2b-1 */
+    fac_mul_bp(fg1, 6 * b - 1, 1); /* 6b-1 */
+    fac_mul_bp(fg1, 6 * b - 5, 1); /* 6b-5 */
 
-    if (stats && b>(int)(progress)) {
-      printf("."); fflush(stdout);
-      progress += percent*2;
+    if (stats && b > (int) (progress)) {
+      printf(".");
+      fflush(stdout);
+      progress += percent * 2;
     }
 
-  } else {
+  }
+  else {
     /*
-      p(a,b) = p(a,m) * p(m,b)
-      g(a,b) = g(a,m) * g(m,b)
-      q(a,b) = q(a,m) * p(m,b) + q(m,b) * g(a,m)
-    */
-    mid = a+(b-a)*0.5224;     /* tuning parameter */
-    bs(a, mid, 1, level+1);
+     p(a,b) = p(a,m) * p(m,b)
+     g(a,b) = g(a,m) * g(m,b)
+     q(a,b) = q(a,m) * p(m,b) + q(m,b) * g(a,m)
+     */
+    mid = a + (b - a) * 0.5224; /* tuning parameter */
+    bs(a, mid, 1, level + 1);
 
     top++;
-    bs(mid, b, gflag, level+1);
+    bs(mid, b, gflag, level + 1);
     top--;
 
     if (stats && level == 0)
-      puts ("");
+      puts("");
 
     ccc = level == 0;
 
-    if (ccc) CHECK_MEMUSAGE;
+    if (ccc)
+      CHECK_MEMUSAGE;
 
-    if (level>=4) {           /* tuning parameter */
+    if (level >= 4) { /* tuning parameter */
 #if 0
       long t = cputime();
 #endif
@@ -531,19 +531,24 @@ bs(unsigned long a, unsigned long b, unsigned gflag, long int level)
 #endif
     }
 
-    if (ccc) CHECK_MEMUSAGE;
+    if (ccc)
+      CHECK_MEMUSAGE;
     mpz_mul(p1, p1, p2);
 
-    if (ccc) CHECK_MEMUSAGE;
+    if (ccc)
+      CHECK_MEMUSAGE;
     mpz_mul(q1, q1, p2);
 
-    if (ccc) CHECK_MEMUSAGE;
+    if (ccc)
+      CHECK_MEMUSAGE;
     mpz_mul(q2, q2, g1);
 
-    if (ccc) CHECK_MEMUSAGE;
+    if (ccc)
+      CHECK_MEMUSAGE;
     mpz_add(q1, q1, q2);
 
-    if (ccc) CHECK_MEMUSAGE;
+    if (ccc)
+      CHECK_MEMUSAGE;
     fac_mul(fp1, fp2);
 
     if (gflag) {
@@ -552,10 +557,12 @@ bs(unsigned long a, unsigned long b, unsigned gflag, long int level)
     }
   }
 
-  if (out&2) {
-    printf("p(%ld,%ld)=",a,b); fac_show(fp1);
+  if (out & 2) {
+    printf("p(%ld,%ld)=", a, b);
+    fac_show(fp1);
     if (gflag)
-      printf("g(%ld,%ld)=",a,b); fac_show(fg1);
+      printf("g(%ld,%ld)=", a, b);
+    fac_show(fg1);
   }
 }
 
@@ -565,29 +572,30 @@ build_sieve(long int n, sieve_t *s)
   long int m, i, j, k;
 
   sieve_size = n;
-  m = (long int)sqrt(n);
-  memset(s, 0, sizeof(sieve_t)*n/2);
+  m = (long int) sqrt(n);
+  memset(s, 0, sizeof(sieve_t) * n / 2);
 
-  s[1/2].fac = 1;
-  s[1/2].pow = 1;
+  s[1 / 2].fac = 1;
+  s[1 / 2].pow = 1;
 
-  for (i=3; i<=n; i+=2) {
-    if (s[i/2].fac == 0) {
-      s[i/2].fac = i;
-      s[i/2].pow = 1;
-      if (i<=m) {
-  for (j=i*i, k=i/2; j<=n; j+=i+i, k++) {
-    if (s[j/2].fac==0) {
-      s[j/2].fac = i;
-      if (s[k].fac == i) {
-        s[j/2].pow = s[k].pow + 1;
-        s[j/2].nxt = s[k].nxt;
-      } else {
-        s[j/2].pow = 1;
-        s[j/2].nxt = k;
-      }
-    }
-  }
+  for (i = 3; i <= n; i += 2) {
+    if (s[i / 2].fac == 0) {
+      s[i / 2].fac = i;
+      s[i / 2].pow = 1;
+      if (i <= m) {
+        for (j = i * i, k = i / 2; j <= n; j += i + i, k++) {
+          if (s[j / 2].fac == 0) {
+            s[j / 2].fac = i;
+            if (s[k].fac == i) {
+              s[j / 2].pow = s[k].pow + 1;
+              s[j / 2].nxt = s[k].nxt;
+            }
+            else {
+              s[j / 2].pow = 1;
+              s[j / 2].nxt = k;
+            }
+          }
+        }
       }
     }
   }
@@ -600,56 +608,57 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
   char *str;
   mp_exp_t exp;
   size_t written;
-//  TMP_DECL;
+  //  TMP_DECL;
 
-//  TMP_MARK;
+  //  TMP_MARK;
 
   if (base == 0)
     base = 10;
-//  if (n_digits == 0)
-//    MPF_SIGNIFICANT_DIGITS (n_digits, base, op->_mp_prec);
+  //  if (n_digits == 0)
+  //    MPF_SIGNIFICANT_DIGITS (n_digits, base, op->_mp_prec);
 
   if (stream == 0)
     stream = stdout;
 
   /* Consider these changes:
-     * Don't allocate memory here for huge n_digits; pass NULL to mpf_get_str.
-     * Make mpf_get_str allocate extra space when passed NULL, to avoid
-       allocating two huge string buffers.
-     * Implement more/other allocation reductions tricks.  */
+   * Don't allocate memory here for huge n_digits; pass NULL to mpf_get_str.
+   * Make mpf_get_str allocate extra space when passed NULL, to avoid
+   allocating two huge string buffers.
+   * Implement more/other allocation reductions tricks.  */
 
-//  str = (char *) TMP_ALLOC (n_digits + 2); /* extra for minus sign and \0 */
-  str = (char *) malloc(n_digits + 2 + 2) ; /* extra for minus sign and \0, and 2 more to avoid rounding*/
+  //  str = (char *) TMP_ALLOC (n_digits + 2); /* extra for minus sign and \0 */
+  str = (char *) malloc(n_digits + 2 + 2); /* extra for minus sign and \0, and 2 more to avoid rounding*/
 
   if (base <= 10 || base > 36)
-    mpf_get_str (str, &exp, base, n_digits+2, op);
-  else  // Select proper charset table
-    mpf_get_str (str, &exp, -base, n_digits+2, op);
-  int n_computed_digits = strlen (str);
+    mpf_get_str(str, &exp, base, n_digits + 2, op);
+  else
+    // Select proper charset table
+    mpf_get_str(str, &exp, -base, n_digits + 2, op);
+  int n_computed_digits = strlen(str);
 
   written = 0;
 
   /* Write sign */
-//  if (str[0] == '-')
-//    {
-//      str++;
-//      fputc ('-', stream);
-//      written = 1;
-//      n_digits--;
-//    }
+  //  if (str[0] == '-')
+  //    {
+  //      str++;
+  //      fputc ('-', stream);
+  //      written = 1;
+  //      n_digits--;
+  //    }
 
-//  {
-//    const char  *point = GMP_DECIMAL_POINT;
-//    size_t      pointlen = strlen (point);
-//    putc ('0', stream);
-//    fwrite (point, 1, pointlen, stream);
-//    written += pointlen + 1;
-//  }
+  //  {
+  //    const char  *point = GMP_DECIMAL_POINT;
+  //    size_t      pointlen = strlen (point);
+  //    putc ('0', stream);
+  //    fwrite (point, 1, pointlen, stream);
+  //    written += pointlen + 1;
+  //  }
 
   /* Write mantissa */
   {
     size_t fwret;
-    fwret = fwrite (str, 1, min(n_digits, n_computed_digits), stream);
+    fwret = fwrite(str, 1, min(n_digits, n_computed_digits), stream);
     written += fwret;
   }
   /* Right padding with zeros */
@@ -659,23 +668,25 @@ my_out_str(FILE *stream, int base, size_t n_digits, mpf_srcptr op)
   }
 
   /* Write exponent */
-//  {
-//    int fpret;
-//    fpret = fprintf (stream, (base <= 10 ? "e%ld" : "@%ld"), exp);
-//    written += fpret;
-//  }
+  //  {
+  //    int fpret;
+  //    fpret = fprintf (stream, (base <= 10 ? "e%ld" : "@%ld"), exp);
+  //    written += fpret;
+  //  }
 
-//  TMP_FREE;
+  //  TMP_FREE;
   free(str);
-  return ferror (stream) ? 0 : written;
+  return ferror(stream) ? 0 : written;
 }
 
 void
-usage() {
+usage()
+{
   printf("Usage: %s [digits] [base]\n", prog_name);
   printf("Compute Archimedes' constant Pi to arbitrary accuracy.\n");
   printf("Output in different numerical bases.\n");
-  printf("\ndigits: number of digits(default 100)\nbase  : numerical base(2-62) (default 10)\n\n");
+  printf(
+      "\ndigits: number of digits(default 100)\nbase  : numerical base(2-62) (default 10)\n\n");
   printf("      --help          display this help and exit\n");
   printf("      --stats         display timing stats\n");
   printf("      --no-output     supress digits output\n");
@@ -686,8 +697,8 @@ usage() {
 int
 main(int argc, char *argv[])
 {
-  mpf_t  pi, qi;
-  long int d=100, i, depth=1, terms, base=10, out_digits;
+  mpf_t pi, qi;
+  long int d = 100, i, depth = 1, terms, base = 10, out_digits;
   unsigned long psize, qsize;
   long begin, mid0, mid1, mid2, mid3, mid4, end;
 
@@ -701,28 +712,29 @@ main(int argc, char *argv[])
   while (1) {
     int this_option_optind = optind ? optind : 1;
     int option_index = 0;
-    static struct option long_options[] = {
-        {"help",       no_argument, 0,  0 },
-        {"stats",      no_argument,  0,  0 },
-        {"no-output",  no_argument,  0,  0 },
-        {"fac-output", no_argument,  0,  0 },
-        { 0,           0,            0,  0 }
-    };
+    static struct option long_options[] =
+      {
+        { "help", no_argument, 0, 0 },
+        { "stats", no_argument, 0, 0 },
+        { "no-output", no_argument, 0, 0 },
+        { "fac-output", no_argument, 0, 0 },
+        { 0, 0, 0, 0 } };
 
     c = getopt_long(argc, argv, "h", long_options, &option_index);
     if (c == -1)
-        break;
+      break;
 
-    switch (c) {
+    switch (c)
+    {
     case 0:
       if (option_index == 0) // help
         usage();
       if (option_index == 1) // stats
         stats = 1;
       if (option_index == 2) // no-output
-        out  &= ~1;
+        out &= ~1;
       if (option_index == 3) // fac-output
-        out  |= 2;
+        out |= 2;
       break;
     case '?':
     case 'h':
@@ -747,37 +759,38 @@ main(int argc, char *argv[])
   if (d < 15) // Avoid floating point exception
     d = 15;
   if (base > 10)
-    d *= log(base)/log(10); // Correct number of digits, for given base
+    d *= log(base) / log(10); // Correct number of digits, for given base
 
-  terms = d/DIGITS_PER_ITER;
-  while ((1L<<depth)<terms)
+  terms = d / DIGITS_PER_ITER;
+  while ((1L << depth) < terms)
     depth++;
   depth++;
 
   if (stats) {
-    percent = terms/100.0;
+    percent = terms / 100.0;
     printf("#terms=%ld, depth=%ld\n", terms, depth);
 
     begin = cputime();
-    printf("sieve   "); fflush(stdout);
+    printf("sieve   ");
+    fflush(stdout);
   }
 
   sieve_size = max(3*5*23*29+1, terms*6);
-  sieve = (sieve_t *)malloc(sizeof(sieve_t)*sieve_size/2);
+  sieve = (sieve_t *) malloc(sizeof(sieve_t) * sieve_size / 2);
   build_sieve(sieve_size, sieve);
 
   if (stats) {
     mid0 = cputime();
-    printf("time = %6.3f\n", (double)(mid0-begin)/1000);
+    printf("time = %6.3f\n", (double) (mid0 - begin) / 1000);
   }
 
   /* allocate stacks */
-  pstack = malloc(sizeof(mpz_t)*depth);
-  qstack = malloc(sizeof(mpz_t)*depth);
-  gstack = malloc(sizeof(mpz_t)*depth);
-  fpstack = malloc(sizeof(fac_t)*depth);
-  fgstack = malloc(sizeof(fac_t)*depth);
-  for (i=0; i<depth; i++) {
+  pstack = malloc(sizeof(mpz_t) * depth);
+  qstack = malloc(sizeof(mpz_t) * depth);
+  gstack = malloc(sizeof(mpz_t) * depth);
+  fpstack = malloc(sizeof(fac_t) * depth);
+  fgstack = malloc(sizeof(fac_t) * depth);
+  for (i = 0; i < depth; i++) {
     mpz_init(pstack[i]);
     mpz_init(qstack[i]);
     mpz_init(gstack[i]);
@@ -792,18 +805,19 @@ main(int argc, char *argv[])
   fac_init(fmul);
 
   /* begin binary splitting process */
-  if (terms<=0) {
-    mpz_set_ui(p2,1);
-    mpz_set_ui(q2,0);
-    mpz_set_ui(g2,1);
-  } else {
-    bs(0,terms,0,0);
+  if (terms <= 0) {
+    mpz_set_ui(p2, 1);
+    mpz_set_ui(q2, 0);
+    mpz_set_ui(g2, 1);
+  }
+  else {
+    bs(0, terms, 0, 0);
   }
 
   if (stats) {
     mid1 = cputime();
-    printf("\nbs      time = %6.3f\n", (double)(mid1-mid0)/1000);
-    printf("   gcd  time = %6.3f\n", (double)(gcd_time)/1000);
+    printf("\nbs      time = %6.3f\n", (double) (mid1 - mid0) / 1000);
+    printf("   gcd  time = %6.3f\n", (double) (gcd_time) / 1000);
   }
 
   /* printf("misc    "); fflush(stdout); */
@@ -818,7 +832,7 @@ main(int argc, char *argv[])
   fac_clear(ftmp);
   fac_clear(fmul);
 
-  for (i=1; i<depth; i++) {
+  for (i = 1; i < depth; i++) {
     mpz_clear(pstack[i]);
     mpz_clear(qstack[i]);
     mpz_clear(gstack[i]);
@@ -834,20 +848,20 @@ main(int argc, char *argv[])
   free(fpstack);
   free(fgstack);
 
-  /* prepare to convert integers to floats */
-  mpf_set_default_prec((long int)(d*BITS_PER_DIGIT+16));
+  /* prepare to convert integers to floats */mpf_set_default_prec(
+      (long int) (d * BITS_PER_DIGIT + 16));
 
   /*
-    p*(C/D)*sqrt(C)
-    pi = -----------------
-       (q+A*p)
-  */
+   p*(C/D)*sqrt(C)
+   pi = -----------------
+   (q+A*p)
+   */
 
-  psize = mpz_sizeinbase(p1,10);
-  qsize = mpz_sizeinbase(q1,10);
+  psize = mpz_sizeinbase(p1, 10);
+  qsize = mpz_sizeinbase(q1, 10);
 
   mpz_addmul_ui(q1, p1, A);
-  mpz_mul_ui(p1, p1, C/D);
+  mpz_mul_ui(p1, p1, C / D);
 
   mpf_init(pi);
   mpf_set_z(pi, p1);
@@ -863,55 +877,56 @@ main(int argc, char *argv[])
   mid2 = cputime();
   /* printf("time = %6.3f\n", (double)(mid2-mid1)/1000); */
 
-  /* initialize temp float variables for sqrt & div */
-  mpf_init(t1);
+  /* initialize temp float variables for sqrt & div */mpf_init(t1);
   mpf_init(t2);
   /* mpf_set_prec_raw(t1, mpf_get_prec(pi)); */
 
   /* final step */
   if (stats)
-    printf("div     ");  fflush(stdout);
+    printf("div     ");
+  fflush(stdout);
   my_div(qi, pi, qi);
   if (stats) {
     mid3 = cputime();
-    printf("time = %6.3f\n", (double)(mid3-mid2)/1000);
+    printf("time = %6.3f\n", (double) (mid3 - mid2) / 1000);
 
-    printf("sqrt    ");  fflush(stdout);
+    printf("sqrt    ");
+    fflush(stdout);
   }
   my_sqrt_ui(pi, C);
   if (stats) {
     mid4 = cputime();
-    printf("time = %6.3f\n", (double)(mid4-mid3)/1000);
+    printf("time = %6.3f\n", (double) (mid4 - mid3) / 1000);
 
-    printf("mul     ");  fflush(stdout);
+    printf("mul     ");
+    fflush(stdout);
   }
   mpf_mul(qi, qi, pi);
   if (stats) {
     end = cputime();
-    printf("time = %6.3f\n", (double)(end-mid4)/1000);
+    printf("time = %6.3f\n", (double) (end - mid4) / 1000);
 
-    printf("total   time = %6.3f\n", (double)(end-begin)/1000);
+    printf("total   time = %6.3f\n", (double) (end - begin) / 1000);
     fflush(stdout);
 
     printf("   P size=%ld digits (%f)\n"
-        "   Q size=%ld digits (%f)\n",
-        psize, (double)psize/d, qsize, (double)qsize/d);
+      "   Q size=%ld digits (%f)\n", psize, (double) psize / d, qsize,
+        (double) qsize / d);
   }
 
   /* output Pi and timing statistics */
-  if (out&1) {
+  if (out & 1) {
     if (stats)
       printf("pi(0,%ld)=\n", terms);
-//    mpf_out_str(stdout, 10, d+2, qi);
+    //    mpf_out_str(stdout, 10, d+2, qi);
     my_out_str(stdout, base, out_digits, qi);
     printf("\n");
   }
 
-  /* free float resources */
-  mpf_clear(pi);
+  /* free float resources */mpf_clear(pi);
   mpf_clear(qi);
 
   mpf_clear(t1);
   mpf_clear(t2);
-  exit (0);
+  exit(0);
 }
