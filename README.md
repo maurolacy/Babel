@@ -13,7 +13,7 @@ Install/Usage:
 
     make # compiles pi utility
     ./BabelSearch.sh 'phrase' # Search for 'phrase' in the digits of Pi
-    ./pi <digits> <base> | tr <table> # Uses BabelSearch.sh reported values to show output
+    ./pi <digits> <base> | tr <table> # Uses BabelSearch.sh reported values to generate output
 
 Ex.: search for "Hello, world!" in the digits of Pi
 
