@@ -24,6 +24,6 @@ def get_pi(digits):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print('Usage: %s <digits>' % sys.argv[0])
+        print('Usage: %s <digits>' % sys.argv[0], file=sys.stderr)
         sys.exit(1)
     print(get_pi(int(sys.argv[1])))

@@ -1,9 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """ Generates translation table for a given key string """
-
-from __future__ import print_function
-from string import digits, letters
+from string import digits, ascii_letters
 import sys
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -15,7 +14,7 @@ if __name__ == "__main__":
         print("Key and phrase must be the same length.")
         sys.exit(1)
     d={}
-    for key in digits + letters:
+    for key in digits + ascii_letters:
         d[key] = key # default table
 
     for key, val in zip(k, p):
