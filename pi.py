@@ -1,11 +1,13 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import sys
 from decimal import *
 
+
 def factorial(n):
     if n <= 1: return n
     return n*factorial(n-1)
+
 
 def get_pi(digits):
     iter = int(digits/14) + 1
@@ -19,5 +21,9 @@ def get_pi(digits):
     
     return Decimal(426880) * Decimal(10005)**Decimal('0.5') / result
 
-#print factorial(6)
-print get_pi(int(sys.argv[1]))
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print('Usage: %s <digits>' % sys.argv[0])
+        sys.exit(1)
+    print(get_pi(int(sys.argv[1])))
