@@ -3,6 +3,14 @@ CC = gcc
 CFLAGS = -O3
 LIBS = -lgmp -lm
 
+OS := $(shell uname -o)
+
+ifeq ($(OS),Darwin)
+	CFLAGS += -I/opt/homebrew/include
+	LDFLAGS += -L/opt/homebrew/lib
+endif
+
+
 OBJEXT = o
 
 all: pi gmp-chudnovsky.$(OBJEXT)
