@@ -37,11 +37,11 @@ then
     D=`expr $D - 1` # gmp-chudnovsky
 #    ./pi.m $D $B | tr 0-9A-Za-z "$TR"
 #    ./pi $D $B | tr 0-9A-Za-z "$TR"
-    echo "Perlre: $REGEX"
-    echo "Digits: $D"
-    echo "Base  : $B"
-    echo "Key   : $KEY"
-    echo -n "Table : " #0-9A-Za-z $TR"
+    echo "Perlre : $REGEX"
+    echo "Digits : $D"
+    echo "Base   : $B"
+    echo "Key    : $KEY"
+    echo -n "Command: ./pi $D $B | tr " #0-9A-Za-z $TR"
     if [ $B -gt 10 ]
     then
         echo -n 0-9
