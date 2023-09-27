@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from mpmath import pi, mp
-from string import digits, maketrans, translate
 from sys import argv, stderr, exit
 
 
