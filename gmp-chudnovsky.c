@@ -290,7 +290,7 @@ fac_set_bp(fac_t f, unsigned long base, long int pow)
   assert(i<=f[0].max_facs);
 }
 
-/* r = f*g */inline void
+/* r = f*g */void
 fac_mul2(fac_t r, fac_t f, fac_t g)
 {
   long int i, j, k;
@@ -336,7 +336,7 @@ fac_mul(fac_t f, fac_t g)
   fmul[0] = tmp[0];
 }
 
-/* f *= base^pow */inline void
+/* f *= base^pow */void
 fac_mul_bp(fac_t f, unsigned long base, unsigned long pow)
 {
   fac_set_bp(ftmp, base, pow);
