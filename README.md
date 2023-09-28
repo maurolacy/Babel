@@ -66,7 +66,7 @@ Search for a random phrase like 'scallop shells are cool'
     $ 
 
 ### Ex. 3
-Michael's full name is first encoded starting at the digit 483989, in base 26
+Michael's full name is first encoded starting at the digit 483967, in base 26
 
     $ ./pi 483989 26 | tr 0-9A-P 0norpl6hsei\ hbloaeKJmc\ MuP
     ...
@@ -74,6 +74,14 @@ Michael's full name is first encoded starting at the digit 483989, in base 26
     ...
     0ocrimK6bhieorcJnis chhKiPhplmlPmKebbr oespb eMichael Joseph Kornblum
     $ 
+
+### Ex. 4
+Share a secret
+    
+    $ ./pi 184145 32 | tr 0-9A-V ua\ \ aodlmc\ rblelGm\ teLoNcoQgsTau
+    ...
+    ...
+    ...
 
 ## Applications
 
