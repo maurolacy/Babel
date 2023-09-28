@@ -1,2 +1,7 @@
+# Project files
+*.iml
+.idea
+.vscode
+
 pi
 *.o
