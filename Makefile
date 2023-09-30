@@ -24,4 +24,10 @@ pi: gmp-chudnovsky.$(OBJEXT)
 clean:
 	$(RM) *.o pi
 
+install:
+	install -m 755 pi /usr/local/bin
+
+uninstall:
+	$(RM) /usr/local/bin/pi
+
 .PHONY: all clean

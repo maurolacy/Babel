@@ -13,8 +13,9 @@ Inspired by Jorge Luis Borges's [[1]] short story, "_La Biblioteca de Babel_". [
 ## Installation / Usage
 
     $ make # compiles pi utility
+    $ make install # installs pi utility to /usr/local/bin (optional)
     $ ./BabelSearch.sh <phrase> # Search for 'phrase' in the digits of Pi
-    $ ./pi <digits> <base> | tr <table> # Uses BabelSearch.sh reported values to generate output
+    $ pi <digits> <base> | tr <table> # Uses BabelSearch.sh reported values to generate output
 
 ## Examples
 ### Ex. 1
@@ -29,7 +30,7 @@ Search for "Hello, world!" in the digits of Pi
     Base   : 10
     Key    : 9788046502813
     Command: ./pi 274656 10 | tr 0-9 odr\!,w\ elH
-    $ ./pi 274656 10 | tr 0-9 odr\!,w\ elH
+    $ pi 274656 10 | tr 0-9 odr\!,w\ elH
     ...
     ...
     ...
@@ -58,7 +59,7 @@ Search for a random phrase like 'scallop shells are cool'
     Base   : 21
     Key    : KCHAF4I2G3BFD9256EJ1048
     Command: ./pi 600070 21 | tr 0-9A-K oc\ hoar7lsleclelsap\ s
-    $ ./pi 600070 21 | tr 0-9A-K oc\ hoar7lsleclelsap\ s
+    $ pi 600070 21 | tr 0-9A-K oc\ hoar7lsleclelsap\ s
     ...
     ...
     ...
@@ -68,7 +69,7 @@ Search for a random phrase like 'scallop shells are cool'
 ### Ex. 3
 Michael's full name is first encoded starting at the digit 483967, in base 26
 
-    $ ./pi 483989 26 | tr 0-9A-P 0norpl6hsei\ hbloaeKJmc\ MuP
+    $ pi 483989 26 | tr 0-9A-P 0norpl6hsei\ hbloaeKJmc\ MuP
     ...
     ...
     ...
@@ -78,7 +79,7 @@ Michael's full name is first encoded starting at the digit 483967, in base 26
 ### Ex. 4
 Share a secret
     
-    $ ./pi 184145 32 | tr 0-9A-V ua\ \ aodlmc\ rblelGm\ teLoNcoQgsTau
+    $ pi 184145 32 | tr 0-9A-V ua\ \ aodlmc\ rblelGm\ teLoNcoQgsTau
     ...
     ...
     ...
